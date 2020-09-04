@@ -8,13 +8,15 @@ from data.cnews_loader import *
 
 base_dir = 'data/cnews'
 train_dir = os.path.join(base_dir, 'cnews.balance_train.txt')
+balance_all_dir = os.path.join(base_dir, 'cnews.balance_all.txt')
 test_dir = os.path.join(base_dir, 'cnews.test.txt')
+all_dir = os.path.join(base_dir, 'cnews.all.txt')
 pred_dir = os.path.join(base_dir, 'cnews.pred.txt')
 
 
 def train():
   # 处理训练数据，如果矩阵过大，可以采用Python scipy库中对稀疏矩阵的优化算法：scipy.sparse.csr_matrix((dd, (row, col)), )
-  train_feature, train_target = process_cl_file(train_dir)
+  train_feature, train_target = process_cl_file(balance_all_dir)
 
   # 模型训练
   print("start training...")
@@ -72,7 +74,7 @@ def predict():
   for result in results:
     result = list(result)
     max_index = result.index(max(result))
-    result_txt.append(str(max_index) + '\t' + str(result[max_index]))
+    result_txt.append(str(max_index) + '\t' + str(result[1]))
     open_file(os.path.join('data', 'result.txt'), mode='w').write('\n'.join(result_txt) + '\n')
 
 
@@ -88,4 +90,4 @@ model = linear_model.LogisticRegression(penalty='l1')  # ovr
 
 train()
 test()
-# predict()
+predict()

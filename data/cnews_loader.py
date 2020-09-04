@@ -24,19 +24,6 @@ def read_file(filename):
   return contents, labels
 
 
-def read_pred_file(filename):
-  """读取文件数据"""
-  contents = []
-  with open_file(filename) as f:
-    for line in f:
-      try:
-        line = line.replace("NA", "-1")
-        contents.append(line.strip().split('\t'))
-      except:
-        print(line)
-  return contents
-
-
 def process_file(filename):
   contents, labels = read_file(filename)
   t_0 = []
@@ -50,18 +37,6 @@ def process_file(filename):
 
 
 def to_categorical(y, num_classes=None):
-  """Converts a class vector (integers) to binary class matrix.
-
-  E.g. for use with categorical_crossentropy.
-
-  Arguments:
-      y: class vector to be converted into a matrix
-          (integers from 0 to num_classes).
-      num_classes: total number of classes.
-
-  Returns:
-      A binary matrix representation of the input.
-  """
   y = np.array(y, dtype='int').ravel()
   if not num_classes:
     num_classes = np.max(y) + 1
@@ -128,6 +103,30 @@ def read_cf_file(filename):
   return contents, labels
 
 
+def read_pred_file(filename):
+  """读取文件数据"""
+  contents = []
+  with open_file(filename) as f:
+    for line in f:
+      cols = line.strip().split('\t')
+      conti_cols = [cols[0], cols[9], cols[10]]
+
+      del cols[0]
+      del cols[0]  # 删除缺失值过多的列
+      del cols[7]
+      del cols[7]
+
+      # 离散特征one-hot
+      for i in conti_cols:
+        if i == '0':
+          cols = cols + [0, 1]
+        else:
+          cols = cols + [1, 0]
+
+      contents.append(cols)
+  return contents
+
+
 def process_cl_file(filename):
   contents, labels = read_cf_file(filename)
   contents = np.array(contents)
@@ -142,7 +141,14 @@ def process_cl_file(filename):
 
 def process_pred_file(filename):
   contents = read_pred_file(filename)
-  return np.array(contents).astype(float)
+  contents = np.array(contents)
+  # 归一化
+  stand_conts = []
+  col_size = len(contents[0]) - 6
+  for i in range(col_size):
+    stand_conts.append(StandardScaler().fit_transform(contents[:, i].reshape(-1, 1)).reshape(-1))
+
+  return np.concatenate((np.array(stand_conts).T, contents[:, col_size:]), axis=1).astype(float)
 
 
 def batch_iter(x1, batch_size=200):

@@ -9,7 +9,7 @@ import time
 from datetime import timedelta
 
 base_dir = 'data/cnews'
-train_dir = os.path.join(base_dir, 'cnews.balance_train.txt')
+train_dir = os.path.join(base_dir, 'cnews.balance_all.txt')
 test_dir = os.path.join(base_dir, 'cnews.test.txt')
 val_dir = os.path.join(base_dir, 'cnews.balance_test.txt')
 
