@@ -108,13 +108,23 @@ def read_cf_file(filename):
   contents, labels = [], []
   with open_file(filename) as f:
     for line in f:
-      try:
-        cols = line.strip().split('\t')
-        del cols[2]  # 删除缺失值过多的列
-        contents.append(cols[1:])
-        labels.append(cols[0])
-      except:
-        print(line)
+      cols = line.strip().split('\t')
+      conti_cols = [cols[1], cols[10], cols[11]]
+
+      del cols[1]
+      del cols[1]  # 删除缺失值过多的列
+      del cols[8]
+      del cols[8]
+
+      # 离散特征one-hot
+      for i in conti_cols:
+        if i == '0':
+          cols = cols + [0, 1]
+        else:
+          cols = cols + [1, 0]
+
+      contents.append(cols[1:])
+      labels.append(cols[0])
   return contents, labels
 
 
@@ -123,7 +133,7 @@ def process_cl_file(filename):
   contents = np.array(contents)
   # 归一化
   stand_conts = []
-  col_size = len(contents[0])
+  col_size = len(contents[0]) - 6
   for i in range(col_size):
     stand_conts.append(StandardScaler().fit_transform(contents[:, i].reshape(-1, 1)).reshape(-1))
 
