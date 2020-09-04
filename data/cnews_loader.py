@@ -137,7 +137,7 @@ def process_cl_file(filename):
   for i in range(col_size):
     stand_conts.append(StandardScaler().fit_transform(contents[:, i].reshape(-1, 1)).reshape(-1))
 
-  return np.array(stand_conts).T.astype(float), np.array(labels)
+  return np.concatenate((np.array(stand_conts).T, contents[:, col_size:]), axis=1).astype(float), np.array(labels)
 
 
 def process_pred_file(filename):

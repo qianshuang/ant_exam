@@ -57,11 +57,3 @@ def balance_sample():
 
 # balance_sample()
 # split_data()
-
-from sklearn.preprocessing import StandardScaler
-
-a = [1,2,3,4]
-a = np.array(a).reshape(-1, 1)
-print(a)
-print()
-print(StandardScaler().fit_transform(a).reshape(-1))

@@ -4,8 +4,7 @@ import tensorflow as tf
 
 
 class TCNNConfig(object):
-  """CNN配置参数"""
-  embedding_dim = 64  # 词向量维度
+  embedding_dim = 128
 
   num_classes = 2  # 类别数
 

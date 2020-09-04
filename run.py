@@ -20,6 +20,11 @@ def train():
   print("start training...")
   model.fit(train_feature, train_target)
 
+  # 模型的重要特征
+  print("feature importance...")
+  n = model.coef_
+  print(list(np.array(n).reshape(-1)))
+
   # 模型导出
   # f = open(os.path.join('model', 'exam.pickle'), 'wb')
   # pickle.dump(model, f, True)
@@ -74,7 +79,7 @@ def predict():
 # random forest
 # model = ensemble.RandomForestClassifier()
 # logistic regression
-model = linear_model.LogisticRegression(penalty='l1')   # ovr
+model = linear_model.LogisticRegression(penalty='l1')  # ovr
 # SVM
 # model = svm.LinearSVC()  # 线性，无概率结果
 # model = svm.SVC(probability=True)  # 核函数，训练慢
